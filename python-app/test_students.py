@@ -1,3 +1,4 @@
+
 import pytest
 import psycopg2
 from students import add_student, get_student, average_grade
@@ -13,7 +14,7 @@ def conn():
     )
 
     with connection.cursor() as cur:
-        cur.execute("DELETE FROM students")
+        cur.execute("TRUNCATE TABLE students RESTART IDENTITY")
         connection.commit()
 
     yield connection
