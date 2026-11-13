@@ -8,12 +8,11 @@ on:
 jobs:
   python:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Récupérer le code
+      - name: Recuperer le code
         uses: actions/checkout@v4
 
-      - name: Préparer PostgreSQL
+      - name: Preparer PostgreSQL
         run: bash db/setup.sh
 
       - name: Installer Python
@@ -21,10 +20,74 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Installer les dépendances
+      - name: Installer les dependances
         working-directory: python-app
         run: pip install -r requirements.txt
 
-      - name: Exécuter les tests
+      - name: Executer les tests
         working-directory: python-app
         run: pytest -v
+
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Preparer PostgreSQL
+        run: bash db/setup.sh
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installer les dependances
+        working-directory: node-app
+        run: npm ci
+
+      - name: Executer les tests
+        working-directory: node-app
+        run: npm test
+
+  java:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Preparer PostgreSQL
+        run: bash db/setup.sh
+
+      - name: Installer Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Executer les tests
+        working-directory: java-app
+        run: mvn -B package
+
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Preparer PostgreSQL
+        run: bash db/setup.sh
+
+      - name: Installer PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo, pdo_pgsql
+
+      - name: Installer les dependances
+        working-directory: php-app
+        run: composer install --no-interaction
+
+      - name: Executer les tests
+        working-directory: php-app
+        run: vendor/bin/phpunit tests
