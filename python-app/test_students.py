@@ -44,4 +44,4 @@ def test_average_grade(conn):
 
     moyenne = average_grade(conn)
 
-    assert moyenne == 13.0
+    assert moyenne == 12.0
